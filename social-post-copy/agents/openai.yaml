@@ -1,0 +1,4 @@
+interface:
+  display_name: "通用社媒 Caption 与 Hashtag"
+  short_description: "为不同品牌和新项目批量生成本地化贴文、中文翻译、标签及来源记录"
+  default_prompt: "请用 $social-post-copy，按照当前项目要求，为提供的素材生成 Caption、中文翻译和有依据的 Hashtag。"

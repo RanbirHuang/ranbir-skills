@@ -1,0 +1,31 @@
+{
+  "project_name": "",
+  "brand_name": "",
+  "account_positioning": "",
+  "audience": "",
+  "default_platform": "",
+  "default_market": "",
+  "default_language": "",
+  "translation_language": "zh-CN",
+  "tone": "根据素材和账号定位自然写作，避免夸大",
+  "allow_mentions": false,
+  "emoji": {
+    "min": 0,
+    "max": 2
+  },
+  "max_caption_chars": null,
+  "forbidden_terms": [],
+  "hashtags": {
+    "count_mode": "at_most",
+    "count": 5,
+    "required": [],
+    "first": [],
+    "last": []
+  },
+  "research": {
+    "mode": "auto",
+    "lookback_days": 7,
+    "fallback_days": 30
+  },
+  "field_map": {}
+}
