@@ -1,0 +1,4 @@
+interface:
+  display_name: "视频特效 Pair 交付打包"
+  short_description: "审核源视频/特效视频对，自动生成 instruction.txt、qa.csv、manifest.jsonl、sha256.txt 交付文件"
+  default_prompt: "请用 $vfx-pair-delivery，审核这批源视频和特效视频，生成交付包并给出审核意见。"

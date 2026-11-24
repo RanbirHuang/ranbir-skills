@@ -1,0 +1,34 @@
+[
+  {
+    "pair_id": "P2-fire-000001",
+    "task": "local_effect",
+    "subtask": "hair_on_fire",
+    "framing": "medium",
+    "roi_region": "hair_head",
+    "instruction_en": "Set her hair on fire: bright, realistic flames rise from the top of her head and grow taller over time, casting warm flickering light on her face and hair. Keep her face, red T-shirt, hand gestures, dark background, lighting and framing unchanged.",
+    "instruction_zh": "让她头顶的头发燃起逼真的火焰，火苗逐渐升高，暖色火光映照脸和头发。脸、红T恤、手势、深色背景、光线和构图不变。",
+    "gen_prompt_source": "镜头固定，平视中景。纯深灰色背景前，一位年轻亚洲女性身穿红色T恤站立，正对镜头情绪激动地说话，双手不断比划。棚内均匀柔光，画面简洁。",
+    "camera": "static",
+    "method": {
+      "source": "stock_footage_pexels",
+      "target": "model_generated"
+    },
+    "tools": {
+      "source": "Pexels 网络素材（剪辑：内部）",
+      "target": "codex + lib tv"
+    },
+    "license_id": null,
+    "performer_id": null,
+    "scene_id": null,
+    "performer_release": false,
+    "reviewer": "MeeCo 内部预审（抽帧目检）",
+    "self_check": {
+      "edit_ok": true,
+      "identity_ok": true,
+      "temporal_ok": true
+    },
+    "source_path": "./videos/P2-fire-000001_source.mp4",
+    "target_path": "./videos/P2-fire-000001_target.mp4",
+    "face_h_ratio": 0.15
+  }
+]

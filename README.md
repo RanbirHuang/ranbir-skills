@@ -22,3 +22,12 @@ Ranbir's own-created skills
 ```
 
 每条至少提供发布平台、目标语言和素材事实。品牌词、目标市场、账号风格及标签要求可直接在消息中说明，也可使用项目配置模板。
+
+## vfx-pair-delivery：视频特效 Pair 交付打包
+
+审核「源视频 → 特效视频」训练数据对，自动检查规格，生成 instruction.txt、qa.csv、manifest.jsonl、sha256.txt 和检查报告。
+
+- [技能入口](vfx-pair-delivery/SKILL.md)
+- [快速开始与安装](vfx-pair-delivery/README.md)
+- [打包脚本](vfx-pair-delivery/scripts/package_pairs.py)
+- [示例 pairs.json / 配置 / 报告](vfx-pair-delivery/examples/)
