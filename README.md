@@ -31,3 +31,10 @@ Ranbir's own-created skills
 - [快速开始与安装](vfx-pair-delivery/README.md)
 - [打包脚本](vfx-pair-delivery/scripts/package_pairs.py)
 - [示例 pairs.json / 配置 / 报告](vfx-pair-delivery/examples/)
+## vfx-source-footage-search：特效原片素材查找
+
+按镜头要求（固定机位、中近景、手上无物件、有动作、背景清楚）在免费素材站找实拍原片，逐帧核查后给出下载链接。
+
+- [技能入口](vfx-source-footage-search/SKILL.md)
+- [快速开始与安装](vfx-source-footage-search/README.md)
+- [浏览器核查工具](vfx-source-footage-search/scripts/pexels_helpers.js)

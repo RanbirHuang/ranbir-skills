@@ -1,0 +1,4 @@
+interface:
+  display_name: "特效原片素材查找"
+  short_description: "在 Pexels 等免费素材站按镜头要求找实拍原片，逐帧核查后给出下载链接"
+  default_prompt: "请用 $vfx-source-footage-search，按项目要求找 2 条合适的原片，给我下载链接。"
