@@ -1,0 +1,25 @@
+{
+  "min_width": 1280,
+  "min_height": 720,
+  "min_bitrate_mbps_1080p": 20.0,
+  "min_bitrate_mbps_720p": 10.0,
+  "allowed_codecs": [
+    "h264",
+    "hevc"
+  ],
+  "allowed_pix_fmts": [
+    "yuv420p"
+  ],
+  "time_tolerance_s": 1.0,
+  "max_instruction_words_en": 60,
+  "max_instruction_chars_zh": 60,
+  "preserved_mad_max": 2.0,
+  "preserved_ssim_min": 0.98,
+  "roi_diff_threshold": 18.0,
+  "roi_margin": 0.03,
+  "analysis_width": 480,
+  "analysis_frames": 24,
+  "reject_on_bitrate": false,
+  "reject_on_audio": false,
+  "res_tolerance": 0.01
+}
