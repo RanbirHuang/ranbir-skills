@@ -39,6 +39,8 @@ Batch files at the package root: `qa_all.csv`, `manifest_all.jsonl`, `report.md`
    `python3 scripts/package_pairs.py pairs.json --out ./交付包 [--config config.json]`.
    Needs ffmpeg/ffprobe, numpy, opencv-python.
 5. **Read `report.md`.** ❌ items make the verdict `reject`; ⚠️ items are warnings for the reviewer.
+   Put reviewer remarks that should travel with the pair into `review_notes` (they appear in the
+   report and manifest notes but never change the verdict).
 6. **Write results back to the table**: format fields (分辨率/帧率/帧数/时长/编码/码率),
    自检结论, 我方审核结果, 审核意见 (number the problems ①②③ and end with what is good),
    the short instructions, the package path, and upload the four files into their attachment fields.
@@ -66,9 +68,26 @@ Batch files at the package root: `qa_all.csv`, `manifest_all.jsonl`, `report.md`
   "performer_id": null, "scene_id": null, "license_id": null, "performer_release": false,
   "reviewer": "who checked it",
   "self_check": {"edit_ok": true, "identity_ok": true, "temporal_ok": true},
+  "review_notes": ["optional remarks, e.g. effect starts earlier than the production prompt"],
   "gen_prompt_source": "optional prompt used to generate/shoot the source"
 }]
 ```
+
+## How to judge the human checks (v1.1)
+
+- **edit_ok is judged against the delivery instruction, not the generation prompt.** The long
+  production prompt (exact seconds, "no snow for the first 0.4 s", breath fog…) is a recipe. If the
+  target shows a convincing effect that differs in timing or detail, mark edit_ok = true, **rewrite
+  the delivery instruction so it describes what the target actually shows**, and add a review note.
+  Reject only when the effect is missing, unconvincing, or breaks the person/scene.
+- **The delivery instruction must match the target video.** Remove anything not visible (e.g.
+  "grass bends" when it doesn't), and describe timing loosely ("in the middle of the clip").
+- **Full-frame effects** (snow, rain, wind, fog, sky/light change — or an auto-detected edit area
+  ≥ 60 %) skip the unedited-region MAD/SSIM check (`preserved_ok = N/A`); judge by eye that the
+  person, motion and scene layout stay the same. A weather-consistent sky/light change is fine.
+- identity_ok / temporal_ok: check 6–10 frames (every 0.5 s). Missing = warning, False = reject.
+- Hard rejections stay: resolution below 1280×720, large source/target size mismatch, timing gap
+  beyond tolerance, missing instructions or over-length instructions, a human check marked False.
 
 ## Automatic checks (defaults in `DEFAULT_CONFIG`)
 
@@ -82,7 +101,7 @@ Batch files at the package root: `qa_all.csv`, `manifest_all.jsonl`, `report.md`
 | Audio track | should be absent | warn (set `reject_on_audio` to fail) |
 | VFR, non-16:9 | — | warn |
 | Instruction length | EN ≤ 60 words, ZH ≤ 60 chars, both present | fail |
-| Unedited region | target scaled to source size, frames matched by timestamp; edited ROI = pixels whose mean diff > 18/255; outside ROI MAD ≤ 2/255 and SSIM ≥ 0.98 | warn (thresholds to be calibrated on the trial batch) |
+| Unedited region | target scaled to source size, frames matched by timestamp; edited ROI = pixels whose mean diff > 18/255; outside ROI MAD ≤ 2/255 and SSIM ≥ 0.98 | warn; **N/A for full-frame effects** (`global_subtasks`, or edit area ≥ `global_edit_area`) |
 | Human self-check | edit_ok / identity_ok / temporal_ok | False = fail, missing = warn |
 
 The tolerance on fps/frames/duration is deliberate: the project lead accepts small timing

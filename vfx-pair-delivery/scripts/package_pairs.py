@@ -40,7 +40,10 @@ DEFAULT_CONFIG = {
     "analysis_width": 480, "analysis_frames": 24,
     "reject_on_bitrate": False,      # bitrate shortfall -> warn only
     "reject_on_audio": False,        # audio track -> warn only
-    "res_tolerance": 0.01,           # source/target size differing by <=1% (e.g. 2050 vs 2052) -> warn, re-export suggested
+    "res_tolerance": 0.01,
+    # full-frame effects (weather, relit sky...): the unedited-region check does not apply
+    "global_subtasks": ["snow", "rain", "wind", "fog", "storm", "sandstorm", "hail"],
+    "global_edit_area": 0.6,         # auto-detected edited area above this -> treat as full-frame effect           # source/target size differing by <=1% (e.g. 2050 vs 2052) -> warn, re-export suggested
 }
 
 
@@ -180,6 +183,8 @@ def count_zh_chars(s):
 
 
 def tf(x):
+    if x == "na":
+        return "N/A"
     if x is None:
         return ""          # not checked yet -> leave blank rather than claim FALSE
     return "TRUE" if x else "FALSE"
@@ -244,7 +249,11 @@ def check_pair(p, sp, tp, ana, cfg):
         issues.append(f"中文指令 {zc} 字 > {cfg['max_instruction_chars_zh']}")
     # unedited region
     pres = None
-    if ana["mad_outside"] is not None:
+    is_global = p.get("subtask") in cfg["global_subtasks"] or (ana["edited_area"] or 0) >= cfg["global_edit_area"]
+    if is_global:
+        pres = "na"
+        warns.append("全画面特效（天气/整体光线变化），非特效区一致性不适用，以人工目检为准")
+    elif ana["mad_outside"] is not None:
         pres = ana["mad_outside"] <= cfg["preserved_mad_max"] and (ana["ssim_outside"] is None or ana["ssim_outside"] >= cfg["preserved_ssim_min"])
         if not pres:
             warns.append(f"非特效区差异 MAD {ana['mad_outside']}/255、SSIM {ana['ssim_outside']}（要求 ≤{cfg['preserved_mad_max']}、≥{cfg['preserved_ssim_min']}，试标校准）")
@@ -255,6 +264,8 @@ def check_pair(p, sp, tp, ana, cfg):
             issues.append(f"人工自检未通过：{k}")
         if v is None:
             warns.append(f"人工自检未填写：{k}")
+    for n in p.get("review_notes", []) or []:
+        warns.append(n)            # reviewer remarks: shown to the client, never change the verdict
     verdict = "reject" if (issues or "fail" in (fmt, ft, br)) else "pass"
     return {
         "format": fmt, "fps_and_time": ft, "bitrate": br, "aligned": aligned,
@@ -307,7 +318,9 @@ def build(p, out_root, cfg):
                 "edited_area_ratio": ana["edited_area"]},
         "license_id": p.get("license_id"), "performer_release": p.get("performer_release"),
         "qa": {"aligned": chk["aligned"], "edit_ok": chk["edit_ok"], "identity_ok": chk["identity_ok"],
-               "preserved_ok": chk["preserved_ok"], "temporal_ok": chk["temporal_ok"],
+               "preserved_ok": None if chk["preserved_ok"] == "na" else chk["preserved_ok"],
+               "preserved_check": "not_applicable_full_frame_effect" if chk["preserved_ok"] == "na" else "outside_roi",
+               "temporal_ok": chk["temporal_ok"],
                "unedited_mad": ana["mad_outside"], "unedited_ssim": ana["ssim_outside"],
                "reviewer": p.get("reviewer"), "notes": "；".join(chk["issues"] + chk["warnings"])},
         "sha256": {"source": sh_src, "target": sh_tgt},
